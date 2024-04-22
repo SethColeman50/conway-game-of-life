@@ -5,40 +5,27 @@
 #include <stdio.h>
 
 void update_cell(size_t row, size_t col, Matrix<double>& input, Matrix<double>& output) {
-    size_t rows = input.rows;
-    size_t cols = input.cols;
-
+    // checking if we are at an edge or corner
     bool is_top_boundary = row == 0;
-    bool is_bottom_boundary = row == rows-1;
+    bool is_bottom_boundary = row == row-1;
     bool is_left_boundary = col == 0;
-    bool is_right_boundary = col == cols-1;
+    bool is_right_boundary = col == col-1;
+
+    // get the number of neighbors of the cell at (row, col) while making sure we don't go out of bounds
+    double num_of_neighbors =
+        is_top_boundary ? 0 : input(row-1, col) + // up
+        is_bottom_boundary ? 0 : input(row+1, col) + // down
+        is_left_boundary ? 0 : input(row, col-1) + // left
+        is_right_boundary ? 0 : input(row, col+1) + // right
+        (is_top_boundary || is_left_boundary) ? 0 : input(row-1, col-1) + // up left
+        (is_top_boundary || is_right_boundary) ? 0 : input(row-1, col+1) + // up right
+        (is_bottom_boundary || is_left_boundary) ? 0 : input(row+1, col-1) + // down left
+        (is_bottom_boundary || is_right_boundary) ? 0 : input(row+1, col+1); // down right
 
     // Get the value of the cell at (row, col)
     double value = input(row, col);
 
-    // Get the value of the cell at (row-1, col)
-    double value_up = is_top_boundary ? 0 : input(row-1, col);
-
-    double value_up_left = (is_top_boundary || is_left_boundary) ? 0 : input(row-1, col-1);
-
-    double value_up_right = (is_top_boundary || is_right_boundary) ? 0 : input(row-1, col+1);
-
-    // Get the value of the cell at (row+1, col)
-    double value_down = (is_bottom_boundary) ? 0 : input(row+1, col);
-
-    double value_down_left = (is_bottom_boundary || is_left_boundary) ? 0 : input (row+1, col-1);
-
-    double value_down_right = (is_bottom_boundary || is_right_boundary) ? 0 : input(row+1, col+1);
-
-    // Get the value of the cell at (row, col-1)
-    double value_left = (is_left_boundary) ? 0 : input(row, col-1);
-
-    // Get the value of the cell at (row, col+1)
-    double value_right = (is_right_boundary) ? 0 : input(row, col+1);
-
-    // Update the value of the cell at (row, col)'
-    double num_of_neighbors = value_up + value_down + value_left + value_right + value_up_left + value_up_right + value_down_left + value_down_right;
-
+    // conway's game of life rules
     if (value == 1) {
         if (num_of_neighbors <= 1 || num_of_neighbors >= 4) {
             output(row,col) = 0;
