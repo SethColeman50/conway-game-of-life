@@ -11,6 +11,7 @@
 - loop to figure out update and then loop to update grid
   - deal with edges
 - Send all neighbors with cell in cuda version
+- debug mode
 
 good parallelization paper
 <http://www.shodor.org/media/content/petascale/materials/UPModules/GameOfLife/Life_Module_Document_pdf.pdf>

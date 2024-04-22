@@ -1,4 +1,5 @@
 // Compile with: g++ -Wall serial.c matrix.c -o serial -lm
+// Run with: ./serial <input_file> <num_steps>
 
 #include "matrix.hpp"
 #include <time.h>
@@ -12,17 +13,16 @@ void update_cell(size_t row, size_t col, Matrix<double>& input, Matrix<double>& 
     bool is_right_boundary = col == col-1;
 
     // get the number of neighbors of the cell at (row, col) while making sure we don't go out of bounds
-    double num_of_neighbors =
-        is_top_boundary ? 0 : input(row-1, col) + // up
-        is_bottom_boundary ? 0 : input(row+1, col) + // down
-        is_left_boundary ? 0 : input(row, col-1) + // left
-        is_right_boundary ? 0 : input(row, col+1) + // right
-        (is_top_boundary || is_left_boundary) ? 0 : input(row-1, col-1) + // up left
-        (is_top_boundary || is_right_boundary) ? 0 : input(row-1, col+1) + // up right
-        (is_bottom_boundary || is_left_boundary) ? 0 : input(row+1, col-1) + // down left
-        (is_bottom_boundary || is_right_boundary) ? 0 : input(row+1, col+1); // down right
+    double num_of_neighbors = (is_top_boundary ? 0 : input(row-1, col)) +  /* top */               \
+        (is_bottom_boundary ? 0 : input(row+1, col)) + /* bottom */                                \
+        (is_left_boundary ? 0 : input(row, col-1)) + /* left */                                    \
+        (is_right_boundary ? 0 : input(row, col+1)) + /* right */                                  \
+        ((is_top_boundary || is_left_boundary) ? 0 : input(row-1, col-1)) + /* top left */         \
+        ((is_top_boundary || is_right_boundary) ? 0 : input(row-1, col+1)) + /* top right */       \
+        ((is_bottom_boundary || is_left_boundary) ? 0 : input(row+1, col-1)) + /* bottom left */   \
+        ((is_bottom_boundary || is_right_boundary) ? 0 : input(row+1, col+1)); /* bottom right */  \
 
-    // Get the value of the cell at (row, col)
+    // get the value of the cell at (row, col)
     double value = input(row, col);
 
     // conway's game of life rules
@@ -64,17 +64,18 @@ int main(int argc, const char* argv[]) {
 
     Matrix<double> output;
 
-    for (size_t t = 1; t < num_steps; t++) {
+    for (size_t t = 0; t < num_steps; t++) {
+        // resets output matrix from last iteration
         output = Matrix<double>(rows, cols).fill_zeros();
-        print_matrix(input);
 
+        // updates all cells in the matrix
         for (size_t i = 0; i < rows; i++) {
             for (size_t j = 0; j < cols; j++) {
-                // Update the value of the cell at (i, j)
-                // update_cell(i, j, input, output);
-                printf("Updating cell (%zu, %zu) at time %zu\n", i, j, t); 
+                update_cell(i, j, input, output);
             }
         }
+        
+        // sets the input matrix to the output matrix for next iteration
         input = output;
     }
 
@@ -82,8 +83,6 @@ int main(int argc, const char* argv[]) {
     clock_gettime(CLOCK_MONOTONIC, &end);
     double time = end.tv_sec-start.tv_sec+(end.tv_nsec-start.tv_nsec)/1000000000.0;
     printf("Time: %g secs\n", time);
-
-    // print_matrix(output);
 
     // save the output matrix
     output.to_csv("output.csv");
