@@ -233,7 +233,7 @@ public:
     Matrix<T>& identity() {
         fill_zeros();
         size_t size = std::min(_rows, _cols);
-        for (size_t i = 0, index = 0; i < _size; index += _cols+1) { _data[index] = (T)1; }
+        for (size_t i = 0; i < _size; i += size+1) { _data[i] = (T)1; }
         return *this;
     }
     /** The data is filled in random values in [0.0, 1.0]. */
