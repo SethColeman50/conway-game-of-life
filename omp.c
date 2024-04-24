@@ -1,7 +1,8 @@
 // Compile with: g++-13 -Wall -fopenmp omp.c -o omp -lm
-// Run with: ./omp <input_file> <num_threads=2> <num_steps>
+// Run with: ./omp <input_file> <output_file> <num_threads=2> <num_steps>
 
 #include "matrix.hpp"
+#include "helpers.c"
 #include <time.h>
 #include <stdio.h>
 
@@ -43,38 +44,15 @@ void update_cell(size_t row, size_t col, Matrix<double>& input, Matrix<double>& 
     }
 }
 
-void print_matrix(Matrix<double>& matrix) {
-    for (size_t i = 0 ; i < matrix.cols+2; i++) {
-        printf("\u001b[48;5;10m \u001b[48;5;10m \u001b[0m");
-    }
-    printf("\n");
-    for (size_t i = 0; i < matrix.rows; i++) {
-        printf("\u001b[48;5;10m \u001b[48;5;10m \u001b[0m");
-        for (size_t j = 0; j < matrix.cols; j++) {
-            if (matrix(i,j)) {
-                printf("\u001b[48;5;240m \u001b[48;5;240m \u001b[0m");
-            } else {
-                // printf("\u001b[47;1m  \u001b[0m");
-                printf("\u001b[48;5;231m \u001b[48;5;231m \u001b[0m");
-            }
-        }
-        printf("\u001b[48;5;10m \u001b[48;5;10m \u001b[0m");
-        printf("\n");
-    }
-    for (size_t i = 0 ; i < matrix.cols+2; i++) {
-        printf("\u001b[48;5;10m  \u001b[0m");
-    }
-    printf("\n");
-}
-
 
 int main(int argc, const char* argv[]) {
     // parse arguments
     Matrix<double> input = Matrix<double>::from_csv(argv[1]);
+    const char* output_file = argv[2];
     size_t rows = input.rows;
     size_t cols = input.cols;
-    size_t num_threads = atoi(argv[2]);
-    size_t num_steps = atoi(argv[3]);
+    size_t num_threads = atoi(argv[3]);
+    size_t num_steps = atoi(argv[4]);
     
     // start the timer
     struct timespec start, end;
@@ -107,7 +85,7 @@ int main(int argc, const char* argv[]) {
     print_matrix(output);
 
     // save the output matrix
-    output.to_csv("output.csv");
+    output.to_csv(output_file);
 
     return 0;
 }
