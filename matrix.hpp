@@ -620,11 +620,12 @@ void matrix_multiplication_block(const Matrix<T>& A, const Matrix<T>& B, Matrix<
 
 //////////////////// IO Helpers ////////////////////
 template <typename T>
-static inline T __read_csv_val(const std::string& token) {
+static inline T __read_csv_val(std::string& token) {
     T val;
+    token.erase(token.find_last_not_of(" \n\r\t")+1);
     std::stringstream ss(token);
     if (!(ss >> val) || !ss.eof()) {
-        std::cerr << "Not a number in CSV file, using 0.0:" << token << std::endl;
+        std::cerr << "Not a number in CSV file, using 0.0: " << token << std::endl;
         return 0.0;
     }
     return val;
