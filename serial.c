@@ -1,4 +1,4 @@
-// Compile with: g++ -Wall serial.c matrix.c -o serial -lm
+// Compile with: g++-13 -Wall serial.c -o serial -lm
 // Run with: ./serial <input_file> <num_steps>
 
 #include "matrix.hpp"
