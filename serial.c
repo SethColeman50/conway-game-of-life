@@ -42,6 +42,10 @@ void update_cell(size_t row, size_t col, Matrix<double>& input, Matrix<double>& 
 }
 
 void print_matrix(Matrix<double>& matrix) {
+    if (matrix.rows > 20 || matrix.cols > 20) {
+        printf("Matrix too large to print\n");
+        return;
+    }
     for (size_t i = 0 ; i < matrix.cols+2; i++) {
         printf("\u001b[48;5;10m \u001b[48;5;10m \u001b[0m");
     }
