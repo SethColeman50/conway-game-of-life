@@ -22,7 +22,7 @@ def main():
     
     # write the grid to a csv file
     with open(file_name, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
+        writer = csv.writer(csvfile, dialect='unix', quoting=csv.QUOTE_NONNUMERIC)
         for row in grid:
             writer.writerow(row)
 
