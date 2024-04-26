@@ -1,10 +1,12 @@
-// Compile with: g++-13 -Wall serial.c -o serial -lm
-// Run with: ./serial <input_file> <output_file> <num_steps>
+// Compile with: g++-13 -Wall -fopenmp omp.c -o omp -lm
+// Run with: ./omp <input_file> <output_file> <num_threads=2> <num_steps>
 
 #include "matrix.hpp"
 #include "helpers.c"
 #include <time.h>
 #include <stdio.h>
+
+#include <omp.h>
 
 void update_cell(size_t row, size_t col, Matrix<double>& input, Matrix<double>& output) {
     // checking if we are at an edge or corner
@@ -43,14 +45,14 @@ void update_cell(size_t row, size_t col, Matrix<double>& input, Matrix<double>& 
 }
 
 
-
 int main(int argc, const char* argv[]) {
     // parse arguments
     Matrix<double> input = Matrix<double>::from_csv(argv[1]);
     const char* output_file = argv[2];
     size_t rows = input.rows;
     size_t cols = input.cols;
-    size_t num_steps = atoi(argv[3]);
+    size_t num_threads = atoi(argv[3]);
+    size_t num_steps = atoi(argv[4]);
     
     // start the timer
     struct timespec start, end;
@@ -58,6 +60,7 @@ int main(int argc, const char* argv[]) {
 
     Matrix<double> output;
 
+    #pragma omp parallel for num_threads(num_threads) default(none) shared(input, output) firstprivate(rows, cols, num_steps)
     for (size_t t = 0; t < num_steps; t++) {
         // resets output matrix from last iteration
         output = Matrix<double>(rows, cols).fill_zeros();

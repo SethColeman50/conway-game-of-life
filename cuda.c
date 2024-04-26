@@ -1,5 +1,5 @@
-// Compile with: g++-13 -Wall serial.c -o serial -lm
-// Run with: ./serial <input_file> <output_file> <num_steps>
+// Compile with: 
+// Run with: ./cuda <input_file> <output_file> <num_steps>
 
 #include "matrix.hpp"
 #include "helpers.c"
