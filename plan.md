@@ -12,6 +12,7 @@
   - deal with edges
 - Send all neighbors with cell in cuda version
 - debug mode
+- from jeff, 9 digit binary index that represents the current 3x3 and a giant const list that acts as a lookout table
 
 good parallelization paper
 <http://www.shodor.org/media/content/petascale/materials/UPModules/GameOfLife/Life_Module_Document_pdf.pdf>
