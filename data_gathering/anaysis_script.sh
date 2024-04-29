@@ -27,13 +27,15 @@ for threads in 1 2 3 4 5 6 7 8; do
 done
 
 # cuda
-for block_size in 8 16 32 64; do
-    for world_size in 8 16 32 64 128 256; do
-        for iter in 1 2 3; do
-            echo $block_size block_size, $world_size world_size, $iter iteration
-            sbatch -o $HOME/conway-game-of-life/output/$world_size-$iter-$block_size.out \
-                -e $HOME/conway-game-of-life/errors/$world_size-$iter-$block_size.err \
-                --export=block_size=$block_size,filename=$world_size.csv $HOME/conway-game-of-life/data_gathering/cuda_sbatch.sh
+for block_size_x in 8 16 24 32 64; do
+    for block_size_y in 8 16 24 32 64; do
+        for world_size in 8 16 32 64 128 256; do
+            for iter in 1 2 3; do
+                echo $block_size_x block_size_x, $block_size_y block_size_y, $world_size world_size, $iter iteration
+                sbatch -o $HOME/conway-game-of-life/output/$world_size-$iter-$block_size_x-$block_size_y.out \
+                    -e $HOME/conway-game-of-life/errors/$world_size-$iter-$block_size_x-$block_size_y.err \
+                    --export=block_size_x=$block_size_x,block_size_y=$block_size_y,filename=$world_size.csv $HOME/conway-game-of-life/data_gathering/cuda_sbatch.sh
+            done
         done
     done
 done

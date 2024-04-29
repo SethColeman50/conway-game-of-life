@@ -7,4 +7,4 @@
 #SBATCH -t 02:00:00
 
 
-$HOME/conway-game-of-life/cuda $HOME/conway-game-of-life/examples/$filename /dev/null $block_size $block_size 1000
+$HOME/conway-game-of-life/cuda $HOME/conway-game-of-life/examples/$filename /dev/null $block_size_x $block_size_y $block_size 1000
