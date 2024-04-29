@@ -9,9 +9,9 @@
 void update_cell(size_t row, size_t col, Matrix<double>& input, Matrix<double>& output) {
     // checking if we are at an edge or corner
     bool is_top_boundary = row == 0;
-    bool is_bottom_boundary = row == row-1;
+    bool is_bottom_boundary = row == input.rows-1;
     bool is_left_boundary = col == 0;
-    bool is_right_boundary = col == col-1;
+    bool is_right_boundary = col == input.cols-1;
 
     // get the number of neighbors of the cell at (row, col) while making sure we don't go out of bounds
     double num_of_neighbors = (is_top_boundary ? 0 : input(row-1, col)) +  /* top */               \
