@@ -5,12 +5,12 @@ def main():
     
     #parse file name from command line
     import sys
-    file_name = sys.argv[1]
+    file_name = f"{sys.argv[1]}.csv"
     
     # prase row and col from command line
     import sys
-    row = int(sys.argv[2])
-    col = int(sys.argv[3])
+    row = int(sys.argv[1])
+    col = int(sys.argv[1])
     
     # create a grid of random 1s and 0s
     grid = []
