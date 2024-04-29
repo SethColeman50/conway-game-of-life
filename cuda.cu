@@ -1,5 +1,5 @@
 // Compile with (on gpu session on cluster): nvcc -O3 -arch=sm_86 cuda.cu -o cuda
-// Run with: ./cuda <input_file> <output_file> <num_steps>
+// Run with: ./cuda <input_file> <output_file> <block_size_x> <block_size_y> <num_steps>
 
 #include "matrix.hpp"
 #include "helpers.c"
@@ -24,8 +24,8 @@
 }
 
 __global__ void update_cell_kernel(size_t rows, size_t cols, double* input, double* output) {
-    size_t col = blockIdx.x*blockDim.x + threadIdx.x;
-    size_t row = blockIdx.y*blockDim.y + threadIdx.y;
+    size_t row = blockIdx.x*blockDim.x + threadIdx.x;
+    size_t col = blockIdx.y*blockDim.y + threadIdx.y;
 
     // check if we are out of bounds
     if (row >= rows || col >= cols) {
@@ -68,12 +68,18 @@ __global__ void update_cell_kernel(size_t rows, size_t cols, double* input, doub
 }
 
 int main(int argc, const char* argv[]) {
+    if (argc != 6) {
+        printf("Usage: %s <input_file> <output_file> <block_size_x> <block_size_y> <num_steps>\n", argv[0]);
+        return -1;
+    }
     // parse arguments
     Matrix<double> input = Matrix<double>::from_csv(argv[1]);
     const char* output_file = argv[2];
     size_t rows = input.rows;
     size_t cols = input.cols;
-    size_t num_steps = atoi(argv[3]);
+    size_t block_size_x = atoi(argv[3]);
+    size_t block_size_y = atoi(argv[4]);
+    size_t num_steps = atoi(argv[5]);
     
     // start the timer
     struct timespec start, end;
@@ -91,7 +97,7 @@ int main(int argc, const char* argv[]) {
     CHECK(cudaMemcpy(d_input, input.data, rows*cols*sizeof(double), cudaMemcpyHostToDevice));
 
     // Calculate grid and block sizes
-    dim3 block_size(16, 16);
+    dim3 block_size(block_size_x, block_size_y);
     dim3 grid_size((rows+block_size.x-1)/block_size.x, (cols+block_size.y-1)/block_size.y);
 
     // // resets output matrix before starting loop
@@ -113,10 +119,11 @@ int main(int argc, const char* argv[]) {
         // Wait for GPU to finish before accessing on host
         cudaDeviceSynchronize();
 
-        // Swap input and output pointers
-        double* temp = d_input;
+        // // Swap input and output pointers
+        // double* temp = d_input;
+        // d_input = d_output;
+        // d_output = temp;
         d_input = d_output;
-        d_output = temp;
     }
 
     // Copy output matrix from GPU
@@ -125,7 +132,9 @@ int main(int argc, const char* argv[]) {
 
     // Free GPU memory
     CHECK(cudaFree(d_input));
-    CHECK(cudaFree(d_output));
+    if (d_output != d_input) {
+        CHECK(cudaFree(d_output));
+    }
 
     // get the elapsed time
     clock_gettime(CLOCK_MONOTONIC, &end);
