@@ -27,6 +27,11 @@ __global__ void update_cell_kernel(size_t rows, size_t cols, double* input, doub
     size_t col = blockIdx.x*blockDim.x + threadIdx.x;
     size_t row = blockIdx.y*blockDim.y + threadIdx.y;
 
+    // check if we are out of bounds
+    if (row >= rows || col >= cols) {
+        return;
+    }
+
     // checking if we are at an edge or corner
     bool is_top_boundary = row == 0;
     bool is_bottom_boundary = row == rows-1;
@@ -86,7 +91,7 @@ int main(int argc, const char* argv[]) {
     CHECK(cudaMemcpy(d_input, input.data, rows*cols*sizeof(double), cudaMemcpyHostToDevice));
 
     // Calculate grid and block sizes
-    dim3 block_size(32, 32);
+    dim3 block_size(16, 16);
     dim3 grid_size((rows+block_size.x-1)/block_size.x, (cols+block_size.y-1)/block_size.y);
 
     // // resets output matrix before starting loop
