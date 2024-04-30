@@ -1,4 +1,5 @@
-// Compile with: g++-13 -Wall -fopenmp omp.c -o omp -lm
+// Compile with (laptop): g++-13 -Wall -fopenmp omp.c -o omp -lm
+// Compile with (mucluster): g++ -Wall -fopenmp omp.c -o omp -lm
 // Run with: ./omp <input_file> <output_file> <num_threads=2> <num_steps>
 
 #include "matrix.hpp"

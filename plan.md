@@ -16,3 +16,5 @@
 
 good parallelization paper
 <http://www.shodor.org/media/content/petascale/materials/UPModules/GameOfLife/Life_Module_Document_pdf.pdf>
+
+Github page if you want to look at our commits: https://github.com/SethColeman50/conway-game-of-life

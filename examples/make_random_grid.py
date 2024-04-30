@@ -1,14 +1,11 @@
-# change this to wite the grid with 1s and 0s and into a csv file
+# to run: python make_random_grid.py <row and col>
+
 def main():
     import random
     import csv
-    
-    #parse file name from command line
     import sys
+
     file_name = f"{sys.argv[1]}.csv"
-    
-    # prase row and col from command line
-    import sys
     row = int(sys.argv[1])
     col = int(sys.argv[1])
     
@@ -22,7 +19,7 @@ def main():
     
     # write the grid to a csv file
     with open(file_name, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile, dialect='unix', quoting=csv.QUOTE_NONNUMERIC)
+        writer = csv.writer(csvfile, dialect='unix', quoting=csv.QUOTE_NONNUMERIC) # args mostly because git hates the excel carriage returns
         for row in grid:
             writer.writerow(row)
 

@@ -1,5 +1,5 @@
 // helper file for the conway's game of life project
-//
+
 #include "matrix.hpp"
 #include <stdio.h>
 

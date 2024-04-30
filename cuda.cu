@@ -100,9 +100,6 @@ int main(int argc, const char* argv[]) {
     dim3 block_size(block_size_x, block_size_y);
     dim3 grid_size((rows+block_size.x-1)/block_size.x, (cols+block_size.y-1)/block_size.y);
 
-    // // resets output matrix before starting loop
-    // CHECK(cudaMemset(d_output, output.data, rows * cols * sizeof(double));)
-
     // Launch kernel
     for (size_t t = 0; t < num_steps; t++) {
 
@@ -119,10 +116,7 @@ int main(int argc, const char* argv[]) {
         // Wait for GPU to finish before accessing on host
         cudaDeviceSynchronize();
 
-        // // Swap input and output pointers
-        // double* temp = d_input;
-        // d_input = d_output;
-        // d_output = temp;
+        // Swap input and output matrices
         d_input = d_output;
     }
 
@@ -140,7 +134,6 @@ int main(int argc, const char* argv[]) {
     clock_gettime(CLOCK_MONOTONIC, &end);
     double time = end.tv_sec-start.tv_sec+(end.tv_nsec-start.tv_nsec)/1000000000.0;
     printf("Time: %g secs\n", time);
-
 
     print_matrix(output);
 
