@@ -2,3 +2,6 @@ output.csv
 settings.json
 serial
 omp
+csv_generator
+gif_materials/
+.DS_Store
