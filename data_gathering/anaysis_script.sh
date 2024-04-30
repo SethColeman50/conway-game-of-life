@@ -1,8 +1,3 @@
-# things to find crossover in
-# number of threads
-# number of nodes
-# world size
-
 # serial
 for world_size in 8 16 32 64 128 256; do
     for iter in 1 2 3; do

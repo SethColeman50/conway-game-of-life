@@ -1,5 +1,9 @@
-// Compile with: g++-13 -Wall csv_generator.c -o csv_generator -lm
+// Used to create images for the gifs
+// Compile with (laptop): g++-13 -Wall csv_generator.c -o csv_generator -lm
+// Compile with (mucluster): g++ -Wall csv_generator.c -o csv_generator -lm
 // Run with: ./csv_generator <input_file> <output_name> <num_steps>
+
+// sorry for the code duplication jeff :(
 
 #include "matrix.hpp"
 #include "helpers.c"

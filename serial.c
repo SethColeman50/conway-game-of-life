@@ -1,4 +1,5 @@
-// Compile with: g++-13 -Wall serial.c -o serial -lm
+// Compile with (laptop): g++-13 -Wall serial.c -o serial -lm
+// Compile with (mucluster): g++ -Wall serial.c -o serial -lm
 // Run with: ./serial <input_file> <output_file> <num_steps>
 
 #include "matrix.hpp"
