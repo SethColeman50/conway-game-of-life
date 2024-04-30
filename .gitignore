@@ -2,3 +2,5 @@ output.csv
 settings.json
 serial
 omp
+gif_materials/
+.DS_Store
